@@ -9,7 +9,7 @@ import {
   ActivityIndicator,
 } from "react-native";
 import { createUserWithEmailAndPassword } from "firebase/auth";
-import { auth, database } from "./firebase";
+import { auth, database } from "../firebase";
 import { ref, set } from "firebase/database";
 
 const validateEmail = (s) => /\S+@\S+\.\S+/.test(s);

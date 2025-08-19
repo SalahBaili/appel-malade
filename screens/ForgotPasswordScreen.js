@@ -1,5 +1,5 @@
-// ForgotPasswordScreen.js (version avec erreurs détaillées + cooldown)
-import React, { useState } from "react";
+// ForgotPasswordScreen.js (robuste + cleanup timer)
+import React, { useState, useRef, useEffect, useMemo } from "react";
 import {
   View,
   Text,
@@ -10,7 +10,7 @@ import {
   ActivityIndicator,
 } from "react-native";
 import { sendPasswordResetEmail } from "firebase/auth";
-import { auth } from "./firebase";
+import { auth } from "../firebase";
 
 const isEmail = (s) => /\S+@\S+\.\S+/.test(s);
 
@@ -21,12 +21,30 @@ export default function ForgotPasswordScreen({ navigation }) {
   const [errorMsg, setErrorMsg] = useState("");
   const [cooldown, setCooldown] = useState(0);
 
-  // petit cooldown 30s pour éviter le spam
+  // on garde l'id du setInterval pour pouvoir le stopper (unmount ou fin du compte)
+  const cooldownRef = useRef(null);
+
+  const isEmailValid = useMemo(() => isEmail(email.trim()), [email]);
+
+  // Nettoyage à la sortie de l'écran
+  useEffect(() => {
+    return () => {
+      if (cooldownRef.current) clearInterval(cooldownRef.current);
+    };
+  }, []);
+
   const startCooldown = (sec = 30) => {
+    // évite plusieurs intervals simultanés
+    if (cooldownRef.current) clearInterval(cooldownRef.current);
+
     setCooldown(sec);
-    const t = setInterval(() => {
+    cooldownRef.current = setInterval(() => {
       setCooldown((s) => {
-        if (s <= 1) clearInterval(t);
+        if (s <= 1) {
+          clearInterval(cooldownRef.current);
+          cooldownRef.current = null;
+          return 0;
+        }
         return s - 1;
       });
     }, 1000);
@@ -36,7 +54,7 @@ export default function ForgotPasswordScreen({ navigation }) {
     setSuccessMsg("");
     setErrorMsg("");
 
-    const e = email.trim();
+    const e = email.trim().toLowerCase();
     if (!e) {
       setErrorMsg("Veuillez entrer votre adresse e-mail.");
       return;
@@ -49,13 +67,13 @@ export default function ForgotPasswordScreen({ navigation }) {
 
     try {
       setSending(true);
-      await sendPasswordResetEmail(auth, e);
+      await sendPasswordResetEmail(auth, e /* , actionCodeSettings optionnel */);
       setSuccessMsg(
         "Un lien de réinitialisation a été envoyé. Vérifiez votre boîte de réception et les spams."
       );
       startCooldown(30);
     } catch (error) {
-      // Affiche l'erreur précise
+      // Mapping détaillé des erreurs courantes
       switch (error.code) {
         case "auth/user-not-found":
           setErrorMsg(
@@ -65,24 +83,21 @@ export default function ForgotPasswordScreen({ navigation }) {
         case "auth/invalid-email":
           setErrorMsg("Adresse e-mail invalide.");
           break;
-        case "auth/missing-android-pkg-name":
-        case "auth/missing-continue-uri":
-        case "auth/missing-ios-bundle-id":
+        case "auth/too-many-requests":
+          setErrorMsg("Trop de tentatives. Réessayez dans quelques minutes.");
+          break;
         case "auth/invalid-continue-uri":
         case "auth/unauthorized-continue-uri":
+        case "auth/missing-continue-uri":
+        case "auth/missing-ios-bundle-id":
+        case "auth/missing-android-pkg-name":
           setErrorMsg(
-            "Le lien de redirection est mal configuré. (Domaines autorisés / continueUrl)."
-          );
-          break;
-        case "auth/too-many-requests":
-          setErrorMsg(
-            "Trop de tentatives. Réessayez dans quelques minutes."
+            "Lien de redirection mal configuré (Domaines autorisés / continueUrl)."
           );
           break;
         default:
           setErrorMsg("Échec de l’envoi de l’e-mail. Réessayez.");
       }
-      // Pour debug local si besoin
       console.log("ForgotPassword error.code:", error.code);
     } finally {
       setSending(false);
@@ -110,15 +125,24 @@ export default function ForgotPasswordScreen({ navigation }) {
           placeholderTextColor="#aaa"
           style={styles.input}
           value={email}
-          onChangeText={setEmail}
+          onChangeText={(t) => {
+            setEmail(t);
+            // on efface les messages pendant la saisie
+            if (errorMsg) setErrorMsg("");
+            if (successMsg) setSuccessMsg("");
+          }}
           autoCapitalize="none"
           keyboardType="email-address"
+          autoCorrect={false}
         />
 
         <TouchableOpacity
-          style={[styles.resetBtn, (sending || cooldown > 0) && { opacity: 0.6 }]}
+          style={[
+            styles.resetBtn,
+            (sending || cooldown > 0 || !isEmailValid) && { opacity: 0.6 },
+          ]}
           onPress={handlePasswordReset}
-          disabled={sending || cooldown > 0}
+          disabled={sending || cooldown > 0 || !isEmailValid}
         >
           {sending ? (
             <ActivityIndicator color="#fff" />
@@ -137,9 +161,7 @@ export default function ForgotPasswordScreen({ navigation }) {
 
         {/* Astuces visibles pour l'utilisateur */}
         <View style={{ marginTop: 12 }}>
-          <Text style={styles.hint}>
-            • Vérifie aussi le dossier spam/indésirables
-          </Text>
+          <Text style={styles.hint}>• Vérifie aussi le dossier spam/indésirables</Text>
           <Text style={styles.hint}>
             • L’e-mail doit correspondre à un compte existant (Authentication → Utilisateurs)
           </Text>

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useMemo } from "react";
 import {
   View,
   Text,
@@ -9,14 +9,14 @@ import {
   ActivityIndicator,
 } from "react-native";
 import { signInWithEmailAndPassword } from "firebase/auth";
-import { auth } from "./firebase";
+import { auth } from "../firebase";
 
 const validateEmail = (s) => /\S+@\S+\.\S+/.test(s);
 
 export default function LoginScreen({ navigation }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [showPwd, setShowPwd] = useState(false); // 👈 toggle
+  const [showPwd, setShowPwd] = useState(false);
   const [errors, setErrors] = useState({});
   const [submitting, setSubmitting] = useState(false);
 
@@ -29,17 +29,28 @@ export default function LoginScreen({ navigation }) {
     return Object.keys(e).length === 0;
   };
 
+  // ✅ n’appelle pas validate() dans le rendu
+  const isFormValid = useMemo(() => {
+    return Boolean(email.trim() && validateEmail(email.trim()) && password);
+  }, [email, password]);
+
   const handleLogin = async () => {
+    // on efface l’erreur globale avant une nouvelle tentative
+    if (errors.global) setErrors((p) => ({ ...p, global: undefined }));
+
     if (!validate()) return;
     try {
       setSubmitting(true);
       await signInWithEmailAndPassword(auth, email.trim(), password);
-      // Navigation gérée par onAuthStateChanged dans App.js
+      // la navigation est gérée par onAuthStateChanged (App.js)
     } catch (error) {
-      setErrors((prev) => ({
-        ...prev,
-        global: "Identifiants invalides ou compte introuvable.",
-      }));
+      let msg = "Identifiants invalides ou compte introuvable.";
+      if (error.code === "auth/invalid-email") msg = "Adresse e-mail invalide.";
+      else if (error.code === "auth/user-disabled") msg = "Compte désactivé.";
+      else if (error.code === "auth/user-not-found") msg = "Aucun compte trouvé.";
+      else if (error.code === "auth/wrong-password") msg = "Mot de passe incorrect.";
+      setErrors((prev) => ({ ...prev, global: msg }));
+      console.log("Login error:", error.code);
     } finally {
       setSubmitting(false);
     }
@@ -47,9 +58,7 @@ export default function LoginScreen({ navigation }) {
 
   return (
     <ImageBackground
-      source={{
-        uri: "https://img.freepik.com/free-vector/gradient-purple-background_23-2148978633.jpg",
-      }}
+      source={{ uri: "https://img.freepik.com/free-vector/gradient-purple-background_23-2148978633.jpg" }}
       style={styles.bg}
     >
       <View style={styles.container}>
@@ -95,9 +104,9 @@ export default function LoginScreen({ navigation }) {
         </TouchableOpacity>
 
         <TouchableOpacity
-          style={[styles.loginBtn, submitting && { opacity: 0.6 }]}
+          style={[styles.loginBtn, (submitting || !isFormValid) && { opacity: 0.6 }]}
           onPress={handleLogin}
-          disabled={submitting}
+          disabled={submitting || !isFormValid}
         >
           {submitting ? <ActivityIndicator color="#fff" /> : <Text style={styles.loginText}>LOGIN</Text>}
         </TouchableOpacity>
@@ -138,7 +147,6 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     justifyContent: "center",
     backgroundColor: "#eee",
-    
     borderWidth: 1,
     borderColor: "#ddd",
   },
