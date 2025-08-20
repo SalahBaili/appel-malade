@@ -1,5 +1,7 @@
 // App.js
+import 'react-native-gesture-handler';                           
 import React, { useEffect, useState } from "react";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
@@ -21,8 +23,8 @@ import PatientListScreen from "./screens/PatientListScreen";
 import CalendarScreen from "./screens/CalendarScreen";
 import ProfileScreen from "./screens/ProfileScreen";
 import SettingsScreen from "./screens/SettingsScreen";
-
-
+import RoomsListScreen from "./screens/RoomsListScreen";
+import EditRoomScreen from "./screens/EditRoomScreen";
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -34,8 +36,8 @@ function MainTabs() {
         headerShown: false,
         tabBarShowLabel: false,
         tabBarStyle: { height: 60, borderTopWidth: 0, elevation: 4 },
-        tabBarIcon: ({ focused, color, size }) => {
-          size = 26;
+        tabBarIcon: ({ focused }) => {
+          const size = 26;
           if (route.name === "HomeTab")
             return <Ionicons name="home" size={size} color={focused ? "#6C63FF" : "#999"} />;
           if (route.name === "Profile")
@@ -71,26 +73,28 @@ export default function App() {
   if (loading) return null;
 
   return (
-    <NavigationContainer>
-      <Stack.Navigator screenOptions={{ headerShown: false }}>
-        {user ? (
-          <>
-            {/* Tabs */}
-            <Stack.Screen name="MainTabs" component={MainTabs} />
-            {/* Routes poussées depuis Home tiles */}
-            <Stack.Screen name="AddRoom" component={AddRoomScreen} />
-            <Stack.Screen name="AddPatient" component={AddPatientScreen} />
-            <Stack.Screen name="PatientList" component={PatientListScreen} />
-            <Stack.Screen name="Calendar" component={CalendarScreen} />
-          </>
-        ) : (
-          <>
-            <Stack.Screen name="Login" component={LoginScreen} />
-            <Stack.Screen name="SignUp" component={SignUpScreen} />
-            <Stack.Screen name="ForgotPassword" component={ForgotPasswordScreen} />
-          </>
-        )}
-      </Stack.Navigator>
-    </NavigationContainer>
+    <GestureHandlerRootView style={{ flex: 1 }}> {/* ⬅️ Enveloppe racine */}
+      <NavigationContainer>
+        <Stack.Navigator screenOptions={{ headerShown: false }}>
+          {user ? (
+            <>
+              <Stack.Screen name="MainTabs" component={MainTabs} />
+              <Stack.Screen name="AddRoom" component={AddRoomScreen} />
+              <Stack.Screen name="AddPatient" component={AddPatientScreen} />
+              <Stack.Screen name="PatientList" component={PatientListScreen} />
+              <Stack.Screen name="Calendar" component={CalendarScreen} />
+              <Stack.Screen name="Rooms" component={RoomsListScreen} />
+              <Stack.Screen name="EditRoom" component={EditRoomScreen} />
+            </>
+          ) : (
+            <>
+              <Stack.Screen name="Login" component={LoginScreen} />
+              <Stack.Screen name="SignUp" component={SignUpScreen} />
+              <Stack.Screen name="ForgotPassword" component={ForgotPasswordScreen} />
+            </>
+          )}
+        </Stack.Navigator>
+      </NavigationContainer>
+    </GestureHandlerRootView>
   );
 }

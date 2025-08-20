@@ -1,23 +1,46 @@
 // HomeScreen.js
-import React from "react";
+import React, { useEffect, useState, useMemo } from "react";
 import { View, Text, StyleSheet, TouchableOpacity, FlatList } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { Ionicons, Feather } from "@expo/vector-icons";
+import { database } from "../firebase";
 
-const tiles = [
-  { key: "addRoom", title: "Add room", icon: "bed-outline", color: ["#ffffff", "#ffffff"], route: "AddRoom" },
-  { key: "living", title: "Living room", icon: "sofa", color: ["#7953F6", "#A56BFF"], route: null, isAccent: true },
-  { key: "addPatient", title: "Add patient", icon: "user-plus", set: "feather", color: ["#ffffff", "#ffffff"], route: "AddPatient" },
-  { key: "patientList", title: "Patient list", icon: "clipboard-outline", color: ["#ffffff", "#ffffff"], route: "PatientList" },
-  { key: "calendar", title: "Calendar", icon: "calendar-outline", color: ["#ffffff", "#ffffff"], route: "Calendar" },
-  { key: "office", title: "Office", icon: "laptop-outline", color: ["#ffffff", "#ffffff"], route: null },
-];
+import { onValue, ref } from "firebase/database";
 
 export default function HomeScreen({ navigation }) {
+  const [roomsCount, setRoomsCount] = useState(0);
+
+  // Écoute en temps réel du nombre de chambres
+  useEffect(() => {
+    const unsub = onValue(ref(database, "rooms"), (snap) => {
+      const data = snap.val() || {};
+      setRoomsCount(Object.keys(data).length);
+    });
+    return () => unsub();
+  }, []);
+
+  // Construire les tuiles en fonction du compteur
+  const tiles = useMemo(() => ([
+    { key: "addRoom", title: "Add room", icon: "bed-outline", color: ["#ffffff", "#ffffff"], route: "AddRoom" },
+    // 👍 Check room → route Rooms + icône Feather "home" (ou "grid")
+    { key: "checkRooms", title: "Check room", icon: "home", set: "feather", color: ["#7953F6", "#A56BFF"], route: "Rooms", isAccent: true, badge: roomsCount },
+    { key: "addPatient", title: "Add patient", icon: "user-plus", set: "feather", color: ["#ffffff", "#ffffff"], route: "AddPatient" },
+    { key: "patientList", title: "Patient list", icon: "clipboard-outline", color: ["#ffffff", "#ffffff"], route: "PatientList" },
+    { key: "calendar", title: "Calendar", icon: "calendar-outline", color: ["#ffffff", "#ffffff"], route: "Calendar" },
+    { key: "office", title: "Office", icon: "laptop-outline", color: ["#ffffff", "#ffffff"], route: null },
+  ]), [roomsCount]);
+
   const renderTile = ({ item }) => {
     const IconComp = item.set === "feather" ? Feather : Ionicons;
+
     const content = (
       <LinearGradient colors={item.color} style={[styles.card, item.isAccent && styles.cardAccent]}>
+        {/* Badge compteur */}
+        {typeof item.badge === "number" && (
+          <View style={styles.badge}>
+            <Text style={styles.badgeText}>{item.badge}</Text>
+          </View>
+        )}
         <IconComp name={item.icon} size={28} color={item.isAccent ? "#fff" : "#6C63FF"} />
         <Text style={[styles.cardTitle, item.isAccent && { color: "#fff" }]} numberOfLines={1}>
           {item.title}
@@ -73,8 +96,21 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 3 },
     elevation: 2,
   },
-  cardAccent: {
-    shadowOpacity: 0.15,
-  },
+  cardAccent: { shadowOpacity: 0.15 },
   cardTitle: { marginTop: 8, fontSize: 14, color: "#444" },
+  // Badge en haut à droite
+  badge: {
+    position: "absolute",
+    top: 10,
+    right: 10,
+    minWidth: 22,
+    height: 22,
+    borderRadius: 11,
+    backgroundColor: "#FF6B6B",
+    alignItems: "center",
+    justifyContent: "center",
+    paddingHorizontal: 6,
+    zIndex: 2,
+  },
+  badgeText: { color: "#fff", fontSize: 12, fontWeight: "700" },
 });
