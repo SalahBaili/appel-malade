@@ -1,4 +1,3 @@
-// screens/AddPatientScreen.js
 import React, { useState } from "react";
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert } from "react-native";
 import { database } from "../firebase";
@@ -25,11 +24,11 @@ export default function AddPatientScreen({ navigation }) {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Add patient</Text>
-      <TextInput style={styles.input} placeholder="First name" value={firstName} onChangeText={setFirstName} />
-      <TextInput style={styles.input} placeholder="Last name" value={lastName} onChangeText={setLastName} />
-      <TextInput style={styles.input} placeholder="Room (optional)" value={room} onChangeText={setRoom} />
-      <TouchableOpacity style={styles.btn} onPress={save}><Text style={styles.btnText}>Save</Text></TouchableOpacity>
+      <Text style={styles.title}>Ajouter un patient</Text>
+      <TextInput style={styles.input} placeholder="Prénom" value={firstName} onChangeText={setFirstName} />
+      <TextInput style={styles.input} placeholder="Nom" value={lastName} onChangeText={setLastName} />
+      <TextInput style={styles.input} placeholder="Chambre (optionnel)" value={room} onChangeText={setRoom} />
+      <TouchableOpacity style={styles.btn} onPress={save}><Text style={styles.btnText}>Enregistrer</Text></TouchableOpacity>
     </View>
   );
 }

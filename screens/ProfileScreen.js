@@ -1,4 +1,3 @@
-// screens/ProfileScreen.js
 import React, { useEffect, useState } from "react";
 import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import { getAuth } from "firebase/auth";
@@ -8,7 +7,7 @@ export default function ProfileScreen() {
 
   useEffect(() => {
     const auth = getAuth();
-    setUser(auth.currentUser); // récupérer l'utilisateur connecté
+    setUser(auth.currentUser);
   }, []);
 
   if (!user) {
@@ -45,41 +44,11 @@ export default function ProfileScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#fff",
-    padding: 20,
-    justifyContent: "flex-start",
-  },
-  title: {
-    fontSize: 26,
-    fontWeight: "bold",
-    marginBottom: 20,
-    textAlign: "center",
-  },
-  infoBox: {
-    marginBottom: 15,
-    padding: 10,
-    borderBottomWidth: 1,
-    borderBottomColor: "#ccc",
-  },
-  label: {
-    fontSize: 16,
-    color: "#777",
-  },
-  value: {
-    fontSize: 18,
-    fontWeight: "600",
-  },
-  button: {
-    marginTop: 30,
-    backgroundColor: "#6C63FF",
-    padding: 15,
-    borderRadius: 10,
-  },
-  buttonText: {
-    color: "#fff",
-    fontSize: 16,
-    textAlign: "center",
-  },
+  container: { flex: 1, backgroundColor: "#fff", padding: 20, justifyContent: "flex-start" },
+  title: { fontSize: 26, fontWeight: "bold", marginBottom: 20, textAlign: "center" },
+  infoBox: { marginBottom: 15, padding: 10, borderBottomWidth: 1, borderBottomColor: "#ccc" },
+  label: { fontSize: 16, color: "#777" },
+  value: { fontSize: 18, fontWeight: "600" },
+  button: { marginTop: 30, backgroundColor: "#6C63FF", padding: 15, borderRadius: 10 },
+  buttonText: { color: "#fff", fontSize: 16, textAlign: "center" },
 });

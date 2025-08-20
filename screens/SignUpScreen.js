@@ -20,8 +20,8 @@ export default function SignupScreen({ navigation }) {
   const [email, setEmail]         = useState("");
   const [password, setPassword]   = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [showPwd, setShowPwd] = useState(false);   // 👈 toggle pwd
-  const [showPwd2, setShowPwd2] = useState(false); // 👈 toggle confirm
+  const [showPwd, setShowPwd] = useState(false);
+  const [showPwd2, setShowPwd2] = useState(false);
   const [errors, setErrors] = useState({});
   const [submitting, setSubmitting] = useState(false);
 
@@ -51,7 +51,6 @@ export default function SignupScreen({ navigation }) {
         lastName:  lastName.trim(),
         email:     email.trim(),
       });
-      // Navigation gérée par onAuthStateChanged (App.js)
     } catch (error) {
       if (error.code === "auth/email-already-in-use") {
         setErrors((p) => ({ ...p, email: "Cet email est déjà utilisé. Veuillez vous connecter ou en choisir un autre." }));
@@ -102,7 +101,6 @@ export default function SignupScreen({ navigation }) {
         />
         {errors.email && <Text style={styles.errorText}>{errors.email}</Text>}
 
-        {/* Password + toggle */}
         <View style={styles.inputRow}>
           <TextInput
             placeholder="Password"
@@ -118,7 +116,6 @@ export default function SignupScreen({ navigation }) {
         </View>
         {errors.password && <Text style={styles.errorText}>{errors.password}</Text>}
 
-        {/* Confirm Password + toggle */}
         <View style={styles.inputRow}>
           <TextInput
             placeholder="Confirm Password"

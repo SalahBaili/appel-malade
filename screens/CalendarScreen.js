@@ -1,9 +1,7 @@
-// screens/CalendarScreen.js
 import React, { useState } from "react";
 import { View, Text, StyleSheet } from "react-native";
 import { Calendar, LocaleConfig } from "react-native-calendars";
 
-// (optionnel) localisation FR
 LocaleConfig.locales.fr = {
   monthNames: ["Janvier","Février","Mars","Avril","Mai","Juin","Juillet","Août","Septembre","Octobre","Novembre","Décembre"],
   monthNamesShort: ["Janv.","Févr.","Mars","Avr.","Mai","Juin","Juil.","Août","Sept.","Oct.","Nov.","Déc."],
@@ -16,9 +14,7 @@ LocaleConfig.defaultLocale = "fr";
 export default function CalendarScreen() {
   const [selected, setSelected] = useState();
 
-  const marked = selected ? {
-    [selected]: { selected: true }
-  } : {};
+  const marked = selected ? { [selected]: { selected: true } } : {};
 
   return (
     <View style={styles.container}>

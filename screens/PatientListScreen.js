@@ -1,4 +1,3 @@
-// screens/PatientListScreen.js
 import React, { useEffect, useState } from "react";
 import { View, Text, FlatList, StyleSheet, ActivityIndicator } from "react-native";
 import { database } from "../firebase";
@@ -18,23 +17,23 @@ export default function PatientListScreen() {
   }, []);
 
   if (!rows) {
-    return <View style={styles.center}><ActivityIndicator /><Text>Loading…</Text></View>;
+    return <View style={styles.center}><ActivityIndicator /><Text> Chargement…</Text></View>;
   }
 
   if (!rows.length) {
-    return <View style={styles.center}><Text>No patients.</Text></View>;
+    return <View style={styles.center}><Text>Aucun patient.</Text></View>;
   }
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Patient list</Text>
+      <Text style={styles.title}>Liste des patients</Text>
       <FlatList
         data={rows}
         keyExtractor={(it)=>it.id}
         renderItem={({item}) => (
           <View style={styles.card}>
             <Text style={styles.name}>{item.lastName} {item.firstName}</Text>
-            <Text style={styles.meta}>{item.room ? `Room: ${item.room}` : "No room"}</Text>
+            <Text style={styles.meta}>{item.room ? `Chambre : ${item.room}` : "Aucune chambre"}</Text>
           </View>
         )}
         ItemSeparatorComponent={()=> <View style={{height:8}}/>}

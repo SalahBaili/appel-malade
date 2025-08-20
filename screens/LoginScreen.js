@@ -29,20 +29,17 @@ export default function LoginScreen({ navigation }) {
     return Object.keys(e).length === 0;
   };
 
-  // ✅ n’appelle pas validate() dans le rendu
-  const isFormValid = useMemo(() => {
-    return Boolean(email.trim() && validateEmail(email.trim()) && password);
-  }, [email, password]);
+  const isFormValid = useMemo(
+    () => Boolean(email.trim() && validateEmail(email.trim()) && password),
+    [email, password]
+  );
 
   const handleLogin = async () => {
-    // on efface l’erreur globale avant une nouvelle tentative
     if (errors.global) setErrors((p) => ({ ...p, global: undefined }));
-
     if (!validate()) return;
     try {
       setSubmitting(true);
       await signInWithEmailAndPassword(auth, email.trim(), password);
-      // la navigation est gérée par onAuthStateChanged (App.js)
     } catch (error) {
       let msg = "Identifiants invalides ou compte introuvable.";
       if (error.code === "auth/invalid-email") msg = "Adresse e-mail invalide.";
@@ -80,7 +77,6 @@ export default function LoginScreen({ navigation }) {
         />
         {errors.email && <Text style={styles.errorText}>{errors.email}</Text>}
 
-        {/* Password + toggle */}
         <View style={styles.inputRow}>
           <TextInput
             placeholder="Password"

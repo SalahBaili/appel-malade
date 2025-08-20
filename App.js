@@ -1,5 +1,5 @@
 // App.js
-import 'react-native-gesture-handler';                           
+import "react-native-gesture-handler";
 import React, { useEffect, useState } from "react";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { NavigationContainer } from "@react-navigation/native";
@@ -73,7 +73,7 @@ export default function App() {
   if (loading) return null;
 
   return (
-    <GestureHandlerRootView style={{ flex: 1 }}> {/* ⬅️ Enveloppe racine */}
+    <GestureHandlerRootView style={{ flex: 1 }}>
       <NavigationContainer>
         <Stack.Navigator screenOptions={{ headerShown: false }}>
           {user ? (

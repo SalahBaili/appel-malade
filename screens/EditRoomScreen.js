@@ -1,4 +1,3 @@
-// screens/EditRoomScreen.js
 import React, { useEffect, useState } from "react";
 import { View, Text, TextInput, StyleSheet, TouchableOpacity, Alert } from "react-native";
 import { database } from "../firebase";

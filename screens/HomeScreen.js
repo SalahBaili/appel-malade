@@ -1,16 +1,13 @@
-// HomeScreen.js
 import React, { useEffect, useState, useMemo } from "react";
 import { View, Text, StyleSheet, TouchableOpacity, FlatList } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { Ionicons, Feather } from "@expo/vector-icons";
 import { database } from "../firebase";
-
 import { onValue, ref } from "firebase/database";
 
 export default function HomeScreen({ navigation }) {
   const [roomsCount, setRoomsCount] = useState(0);
 
-  // Écoute en temps réel du nombre de chambres
   useEffect(() => {
     const unsub = onValue(ref(database, "rooms"), (snap) => {
       const data = snap.val() || {};
@@ -19,23 +16,23 @@ export default function HomeScreen({ navigation }) {
     return () => unsub();
   }, []);
 
-  // Construire les tuiles en fonction du compteur
-  const tiles = useMemo(() => ([
-    { key: "addRoom", title: "Add room", icon: "bed-outline", color: ["#ffffff", "#ffffff"], route: "AddRoom" },
-    // 👍 Check room → route Rooms + icône Feather "home" (ou "grid")
-    { key: "checkRooms", title: "Check room", icon: "home", set: "feather", color: ["#7953F6", "#A56BFF"], route: "Rooms", isAccent: true, badge: roomsCount },
-    { key: "addPatient", title: "Add patient", icon: "user-plus", set: "feather", color: ["#ffffff", "#ffffff"], route: "AddPatient" },
-    { key: "patientList", title: "Patient list", icon: "clipboard-outline", color: ["#ffffff", "#ffffff"], route: "PatientList" },
-    { key: "calendar", title: "Calendar", icon: "calendar-outline", color: ["#ffffff", "#ffffff"], route: "Calendar" },
-    { key: "office", title: "Office", icon: "laptop-outline", color: ["#ffffff", "#ffffff"], route: null },
-  ]), [roomsCount]);
+  const tiles = useMemo(
+    () => [
+      { key: "addRoom", title: "Add room", icon: "bed-outline", color: ["#ffffff", "#ffffff"], route: "AddRoom" },
+      { key: "checkRooms", title: "Check room", icon: "home", set: "feather", color: ["#7953F6", "#A56BFF"], route: "Rooms", isAccent: true, badge: roomsCount },
+      { key: "addPatient", title: "Add patient", icon: "user-plus", set: "feather", color: ["#ffffff", "#ffffff"], route: "AddPatient" },
+      { key: "patientList", title: "Patient list", icon: "clipboard-outline", color: ["#ffffff", "#ffffff"], route: "PatientList" },
+      { key: "calendar", title: "Calendar", icon: "calendar-outline", color: ["#ffffff", "#ffffff"], route: "Calendar" },
+      { key: "office", title: "Office", icon: "laptop-outline", color: ["#ffffff", "#ffffff"], route: null },
+    ],
+    [roomsCount]
+  );
 
   const renderTile = ({ item }) => {
     const IconComp = item.set === "feather" ? Feather : Ionicons;
 
     const content = (
       <LinearGradient colors={item.color} style={[styles.card, item.isAccent && styles.cardAccent]}>
-        {/* Badge compteur */}
         {typeof item.badge === "number" && (
           <View style={styles.badge}>
             <Text style={styles.badgeText}>{item.badge}</Text>
@@ -64,7 +61,9 @@ export default function HomeScreen({ navigation }) {
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <Text style={styles.hello}>Hello, <Text style={{ fontWeight: "800" }}>John!</Text></Text>
+        <Text style={styles.hello}>
+          Hello, <Text style={{ fontWeight: "800" }}>John!</Text>
+        </Text>
         <Ionicons name="menu" size={24} color="#333" />
       </View>
 
@@ -98,7 +97,6 @@ const styles = StyleSheet.create({
   },
   cardAccent: { shadowOpacity: 0.15 },
   cardTitle: { marginTop: 8, fontSize: 14, color: "#444" },
-  // Badge en haut à droite
   badge: {
     position: "absolute",
     top: 10,

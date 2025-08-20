@@ -1,4 +1,3 @@
-// screens/AddRoomScreen.js
 import React, { useState } from "react";
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert } from "react-native";
 import { database } from "../firebase";
@@ -21,10 +20,10 @@ export default function AddRoomScreen({ navigation }) {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Add room</Text>
-      <TextInput style={styles.input} placeholder="Room name" value={name} onChangeText={setName} />
-      <TextInput style={styles.input} placeholder="Floor / Wing (optional)" value={floor} onChangeText={setFloor} />
-      <TouchableOpacity style={styles.btn} onPress={save}><Text style={styles.btnText}>Save</Text></TouchableOpacity>
+      <Text style={styles.title}>Ajouter une chambre</Text>
+      <TextInput style={styles.input} placeholder="Nom de la chambre" value={name} onChangeText={setName} />
+      <TextInput style={styles.input} placeholder="Étage / Aile (optionnel)" value={floor} onChangeText={setFloor} />
+      <TouchableOpacity style={styles.btn} onPress={save}><Text style={styles.btnText}>Enregistrer</Text></TouchableOpacity>
     </View>
   );
 }

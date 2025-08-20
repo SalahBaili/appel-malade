@@ -1,4 +1,3 @@
-// screens/RoomsListScreen.js
 import React, { useEffect, useState, useRef } from "react";
 import {
   View,
@@ -17,7 +16,7 @@ import { Ionicons } from "@expo/vector-icons";
 
 export default function RoomsListScreen({ navigation }) {
   const [rooms, setRooms] = useState(null);
-  const swipeableRefs = useRef(new Map()); // pour fermer un item après action
+  const swipeableRefs = useRef(new Map());
 
   useEffect(() => {
     const q = query(ref(database, "rooms"), orderByChild("name"));
@@ -63,10 +62,9 @@ export default function RoomsListScreen({ navigation }) {
       extrapolate: "clamp",
     });
     return (
-    <TouchableOpacity style={styles.deleteBtn} onPress={() => confirmDelete(room)}>
-      <Animated.View style={{ transform: [{ scale }], alignItems: "center" }}>
-        <Ionicons name="trash-outline" size={24} color="#fff" />
-        {/* 👇 le libellé est bien dans <Text> */}
+      <TouchableOpacity style={styles.deleteBtn} onPress={() => confirmDelete(room)}>
+        <Animated.View style={{ transform: [{ scale }], alignItems: "center" }}>
+          <Ionicons name="trash-outline" size={24} color="#fff" />
           <Text style={styles.deleteText}>Supprimer</Text>
         </Animated.View>
       </TouchableOpacity>
