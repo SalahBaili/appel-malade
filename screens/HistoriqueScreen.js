@@ -71,7 +71,7 @@ export default function HistoriqueScreen() {
 
 const styles = StyleSheet.create({
   container: { flex: 1, padding: 16, backgroundColor: "#fff" },
-  title: { fontSize: 20, fontWeight: "700", marginBottom: 12 },
+  title: { fontSize: 20, fontWeight: "700", marginBottom: 12, marginTop: 40 },
   center: { flex: 1, alignItems: "center", justifyContent: "center" },
   item: { padding: 12, borderRadius: 12, borderWidth: 1, borderColor: "#eee", backgroundColor: "#fafafa" },
   line: { flexDirection: "row", justifyContent: "space-between", marginBottom: 4 },

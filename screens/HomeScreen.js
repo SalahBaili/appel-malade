@@ -1,18 +1,39 @@
+// screens/HomeScreen.js
 import React, { useEffect, useState, useMemo } from "react";
 import { View, Text, StyleSheet, TouchableOpacity, FlatList } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { Ionicons, Feather } from "@expo/vector-icons";
-import { database } from "../firebase";
+import { auth, database } from "../firebase";
 import { onValue, ref } from "firebase/database";
 
 export default function HomeScreen({ navigation }) {
   const [roomsCount, setRoomsCount] = useState(0);
+  const [nurseName, setNurseName] = useState("");
 
+  // Compteur de chambres
   useEffect(() => {
     const unsub = onValue(ref(database, "rooms"), (snap) => {
       const data = snap.val() || {};
       setRoomsCount(Object.keys(data).length);
     });
+    return () => unsub();
+  }, []);
+
+  // Récupération du nom de l'infirmier depuis /users/{uid}
+  useEffect(() => {
+    const u = auth.currentUser;
+    if (!u) return;
+
+    const userRef = ref(database, `users/${u.uid}`);
+    const unsub = onValue(userRef, (snap) => {
+      const v = snap.val() || {};
+      const fullName = [v.firstName, v.lastName].filter(Boolean).join(" ").trim();
+
+      // Fallbacks : displayName puis préfixe d'email
+      const emailPrefix = u.email ? u.email.split("@")[0] : "";
+      setNurseName(fullName || u.displayName || emailPrefix || "Nurse");
+    });
+
     return () => unsub();
   }, []);
 
@@ -61,8 +82,9 @@ export default function HomeScreen({ navigation }) {
   return (
     <View style={styles.container}>
       <View style={styles.header}>
+        {/* ✅ Nom dynamique */}
         <Text style={styles.hello}>
-          Hello, <Text style={{ fontWeight: "800" }}>John!</Text>
+          Hello, <Text style={{ fontWeight: "800" }}>{nurseName || "…"}</Text>
         </Text>
         <Ionicons name="menu" size={24} color="#333" />
       </View>
@@ -82,7 +104,7 @@ export default function HomeScreen({ navigation }) {
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: "#F3F5FB", paddingTop: 40 },
   header: { paddingHorizontal: 16, flexDirection: "row", justifyContent: "space-between", alignItems: "center", marginBottom: 12 },
-  hello: { fontSize: 26, color: "#111" , marginTop:15},
+  hello: { fontSize: 26, color: "#111", marginTop: 15 },
   card: {
     height: 120,
     borderRadius: 20,
