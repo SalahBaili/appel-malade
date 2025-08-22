@@ -108,7 +108,7 @@ const styles = StyleSheet.create({
   center: { flex: 1, alignItems: "center", justifyContent: "center" },
   container: { flex: 1, backgroundColor: "#fff", padding: 16 },
   header: { flexDirection: "row", alignItems: "center", marginBottom: 16, justifyContent: "space-between" },
-  headerTitle: { fontSize: 18, fontWeight: "700" },
+  headerTitle: { fontSize: 18, fontWeight: "700",marginTop:40 },
   input: { borderWidth: 1, borderColor: "#ddd", borderRadius: 12, padding: 12, marginBottom: 10, backgroundColor: "#fafafa" },
   saveBtn: { backgroundColor: "#6C63FF", padding: 14, borderRadius: 14, alignItems: "center", marginTop: 6 },
   saveText: { color: "#fff", fontWeight: "700" },
