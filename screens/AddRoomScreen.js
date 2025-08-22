@@ -30,7 +30,7 @@ export default function AddRoomScreen({ navigation }) {
 
 const styles = StyleSheet.create({
   container: { flex:1, padding:16, backgroundColor:"#fff" },
-  title:{ fontSize:20, fontWeight:"700", marginBottom:12 },
+  title:{ fontSize:20, marginTop:40, fontWeight:"700", marginBottom:12 },
   input:{ borderWidth:1, borderColor:"#ddd", borderRadius:12, padding:12, marginBottom:10, backgroundColor:"#fafafa" },
   btn:{ backgroundColor:"#6C63FF", padding:14, borderRadius:14, alignItems:"center", marginTop:6 },
   btnText:{ color:"#fff", fontWeight:"700" }

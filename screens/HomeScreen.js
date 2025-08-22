@@ -82,7 +82,7 @@ export default function HomeScreen({ navigation }) {
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: "#F3F5FB", paddingTop: 40 },
   header: { paddingHorizontal: 16, flexDirection: "row", justifyContent: "space-between", alignItems: "center", marginBottom: 12 },
-  hello: { fontSize: 26, color: "#111" },
+  hello: { fontSize: 26, color: "#111" , marginTop:15},
   card: {
     height: 120,
     borderRadius: 20,

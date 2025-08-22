@@ -34,7 +34,7 @@ export default function AddPatientScreen({ navigation }) {
 }
 
 const styles = StyleSheet.create({
-  container:{ flex:1, padding:16, backgroundColor:"#fff" },
+  container:{ flex:1, padding:16, backgroundColor:"#fff", marginTop:40 },
   title:{ fontSize:20, fontWeight:"700", marginBottom:12 },
   input:{ borderWidth:1, borderColor:"#ddd", borderRadius:12, padding:12, marginBottom:10, backgroundColor:"#fafafa" },
   btn:{ backgroundColor:"#6C63FF", padding:14, borderRadius:14, alignItems:"center", marginTop:6 },
