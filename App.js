@@ -28,6 +28,7 @@ import EditRoomScreen from "./screens/EditRoomScreen";
 import AddPatientScreen from "./screens/AddPatientScreen";
 import PatientListScreen from "./screens/PatientListScreen";
 import CalendarScreen from "./screens/CalendarScreen";
+import OfficeScreen from "./screens/OfficeScreen";
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -54,6 +55,7 @@ function MainTabs() {
       <Tab.Screen name="Profile" component={ProfileScreen} />
       <Tab.Screen name="History" component={HistoriqueScreen} />
       <Tab.Screen name="Settings" component={SettingsScreen} />
+      
     </Tab.Navigator>
   );
 }
@@ -85,6 +87,7 @@ export default function App() {
               <Stack.Screen name="AddPatient" component={AddPatientScreen} />
               <Stack.Screen name="PatientList" component={PatientListScreen} />
               <Stack.Screen name="Calendar" component={CalendarScreen} />
+              <Stack.Screen name="Office" component={OfficeScreen} />
             </>
           ) : (
             <>

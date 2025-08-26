@@ -58,8 +58,7 @@ export default function HomeScreen({ navigation }) {
       { key: "addPatient",  title: "Add patient",  icon: "user-plus", set: "feather",color: ["#ffffff", "#ffffff"], route: "AddPatient" },
       { key: "patientList", title: "Patient list", icon: "clipboard-outline",        color: ["#ffffff", "#ffffff"], route: "PatientList" },
       { key: "calendar",    title: "Calendar",     icon: "calendar-outline",         color: ["#ffffff", "#ffffff"], route: "Calendar" },
-      { key: "office",      title: "Office",       icon: "laptop-outline",           color: ["#ffffff", "#ffffff"], route: null },
-    ],
+{ key: "office",      title: "Office",       icon: "laptop-outline",           color: ["#ffffff", "#ffffff"], route: "Office" },    ],
     [roomsCount]
   );
 
