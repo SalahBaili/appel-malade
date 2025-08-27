@@ -18,12 +18,12 @@ const FALLBACK = {
   description:
     "Accueil des patients, coordination des soins, gestion des chambres et transmissions.",
   address: "Bloc A, 2e étage, Chambre 201 – 205",
-  officePhone: "+212 5 22 00 00 00",
+  officePhone: "+216 51 539 3334",
   head: {
-    name: "Mme Samira BENALI",
-    title: "Cheffe de service",
-    email: "samira.benali@example.com",
-    phone: "+212 6 12 34 56 78",
+    name: "Mr Zied Hmila",
+    title: "Chef de service",
+    email: "Zied.hmila@example.com",
+    phone: "+216 51 539 3334",
   },
   hours: {
     week: "Lun – Ven : 08:00 → 18:00",
